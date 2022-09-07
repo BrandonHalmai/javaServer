@@ -1,5 +1,7 @@
-package application;
+package application; //This refers to the folder that is currently holding the class; this is so classes can access our
+//public methods, i.e. our main method.
 
+//These are imported libraries that are not built into java, so we import them to utilise their functionalities.
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -17,11 +19,14 @@ import com.google.gson.JsonObject;
 import application.Invoice.Product;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.*;
 import java.io.*;
 
-
+//Here is the MenuThread class that inherits the Thread library. Here we'll use the MenuThread method to execute other
+//methods when they are called; these methods are called report, delete and exit. By using the Thread library we're
+//able to use multiple threads for our application. It starts by displaying the options and when the letter
+//that corresponds to the method is entered, it executes that method; if any other letter is entered, a message is
+//returned stating 'Invalid Task'.
 public class MenuThread extends Thread {
     public void run() {
         while (true) {
@@ -47,23 +52,36 @@ public class MenuThread extends Thread {
             }
         }
     }
+//Here the report method will display all the invoices for the server.
     public String report() {
-        ArrayList<Product> products = new ArrayList<Product>();
-        double total = 0;
-        Invoice invoice = new Invoice(products, total);
-        List<Invoice> invoices = new ArrayList<Invoice>();
+        ArrayList<Product> products = new ArrayList<Product>(); //Here we're defining a new ArrayList as 'products'.
+        double total = 0; //Here we're defining 'total' as a floating point to hold the value zero.
+        Invoice invoice = new Invoice(products, total); //Using the object 'Invoice' we can utilise the custom methods
+        //we've built for the class.
+        List<Invoice> invoices = new ArrayList<Invoice>(); //Creating a list that holds our objects of 'Invoice' named
+        //'invoices' to hold our invoices.
 
-        String name = null;
-        double price = 0;
+        String name = null; //String variable that holds no data; this is because it's a dynamic variable, meaning
+        //it will change often.
+        double price = 0; //Floating point variable named price.
 
-        Product product = new Product(name, price);
-        System.out.println("REPORT\n");
+        Product product = new Product(name, price); //Creating a new 'Product' called 'product'. It will take in both
+        //the name and price parameters defined above.
+        System.out.println("REPORT\n"); //This will print out the word 'REPORT' and a new line.
 
-        String path = System.getProperty("user.home") + File.separator + "Invoices";
+        String path = System.getProperty("user.home") + File.separator + "Invoices"; //Here we're creating a new
+        //variable that will store the path to which the invoices will be saved at.
 
-        File directory = new File(path);
-        File filelist[] = directory.listFiles();
+        File directory = new File(path); //Here we are assigning the directory to be equal to the path variable.
+        File filelist[] = directory.listFiles(); //Here this 'filelist' array will hold the names of all the files in
+        //the current directory.
 
+
+        //Here the for loop will first traverse the 'filelist' array and store the names of files in the directory in
+        //lowercase to the variable 'readThisFile'. It then checks if the extension is equal to '.json'; if true, a
+        //Gson object is created to translate the .json file to an object, so it can be later be printed out. The same
+        //is done to the '.xml' file extension. After the translation is complete, a return statement is created stating
+        //the amount of invoices there are in the list and the total price of the invoices.
         for (File file:filelist) {
             String readThisFile = file.getName().toLowerCase();
 
@@ -142,6 +160,9 @@ public class MenuThread extends Thread {
         return "";
     }
 
+    //Here the delete method will be used to delete invoices saved into the directory. It first warns the user that
+    //file extensions ending with .xml and .json will be deleted from the current working directory. It then prints the
+    //names of all the files that will be deleted if the user proceeds.
     public void delete() {
         String path = System.getProperty("user.home") + File.separator + "Invoices";
         System.out.println("WARNING! YOU HAVE CHOSEN TO DELETE ALL INVOICES.\n" + "THIS WILL DELETE ALL FILES ENDING WITH .xml OR .json FROM " + path);
@@ -157,7 +178,9 @@ public class MenuThread extends Thread {
             }
         }
 
-
+        //If the user enters the word 'DELETE' in uppercase characters after the first warning, the files will be
+        //deleted and a string will be returned stating that the invoices have been deleted. However, if the user
+        //enters anything other than the word 'DELETE', the operation is cancelled.
         System.out.println("TYPE 'DELETE' AND PRESS ENTER TO PROCEED OR PRESS ENTER TO CANCEL");
 
         Scanner scanner = new Scanner(System.in);
